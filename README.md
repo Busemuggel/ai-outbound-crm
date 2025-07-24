@@ -6,6 +6,18 @@ Ein modulares CRM-System zur automatisierten Lead-Generierung, KI-Anreicherung u
 
 ---
 
+## 📚 Inhaltsverzeichnis
+
+- [🧠 Projektüberblick](#-ai-outbound-crm--microservice-architektur-für-automatisierte-leadgenerierung)
+- [🚀 Übersicht](#-übersicht)
+- [🧱 Services (Beispielarchitektur)](#-services-beispielarchitektur)
+- [📸 Demo](#-demo)
+- [🛠️ Techstack](#️-techstack)
+- [📂 Ordnerstruktur](#-ordnerstruktur)
+- [📂 Projektstruktur (Monorepo mit Nx)](#-projektstruktur-monorepo-mit-nx)
+- [🚀 CI/CD & Deployment](#-cicd--deployment)
+- [🔮 Ausblick & Nächste Schritte](#-ausblick--nächste-schritte)
+
 ## 🚀 Übersicht
 
 Dieses CRM-System automatisiert den B2B-Outbound-Prozess:
@@ -190,3 +202,17 @@ Die Pipeline umfasst:
 - Dynamisches ENV-Management
 - Logging & Debug-Steps für CI-Ausgaben
 - Details: [DEPLOYMENT_DETAILS.md](./DEPLOYMENT_DETAILS.md)
+
+## 🔮 Ausblick & Nächste Schritte
+
+Diese Features und Erweiterungen sind für zukünftige Iterationen geplant:
+- 🎛️ **Backstage.io Integration**  
+  Zur internen Developer-Dokumentation & Microservice-Verwaltung
+
+- 📱 **Responsives CRM-Frontend**  
+  Optimierung für mobile Endgeräte & Tablets
+
+- ✅ **Komplette Testabdeckung mit Jest**  
+  Ziel: 90–100 % Code Coverage im gesamten Monorepo
+
+Weitere Features folgen mit wachsender Nutzerbasis.
