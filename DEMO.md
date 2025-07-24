@@ -27,10 +27,3 @@ So ein System ist ideal für Startups, Agenturen & KMUs geeignet, die:
 
 - 🌐 [Demo-CRM öffnen](https://demo.crm.v2202210185651204820.powersrv.de/login)
 - 📁 [Systemarchitektur ansehen](./ARCHITECTURE.md)
-
----
-
-## 📸 Screenshots
-
-![Landingpage](./public/landingpage-screenshot.png)
-![Systemdiagramm](./diagrams/system-architecture.png)
