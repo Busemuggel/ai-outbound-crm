@@ -9,6 +9,7 @@ Ein modulares CRM-System zur automatisierten Lead-Generierung, KI-Anreicherung u
 ## 🚀 Übersicht
 
 Dieses CRM-System automatisiert den B2B-Outbound-Prozess:
+
 1. Webdaten werden mit Puppeteer gesammelt.
 2. Die Daten werden per GPT-Integration angereichert.
 3. Automatisierte Kampagnen versenden zielgerichtete E-Mails.
@@ -18,15 +19,16 @@ Dieses CRM-System automatisiert den B2B-Outbound-Prozess:
 
 ## 🧱 Services (Beispielarchitektur)
 
-| Service          | Aufgabe                                             |
-|------------------|-----------------------------------------------------|
-| `lead-service`   | Web Scraping + Firmendaten-Erhebung                |
-| `ai-service`     | GPT-gestützte Datenanreicherung                    |
-| `email-service`  | Kampagnen-Management & automatisierter Versand     |
-| `calendar-service` | Google Calendar API – Terminbuchung              |
-| `user-service`   | Authentifizierung & Rechte                         |
-| `crm-frontend`   | Kampagnen, Kontakte, Gesprächsnotizen              |
-| `crm-demo-frontend`   | Kampagnen, Kontakte, Gesprächsnotizen         |
+| Service             | Aufgabe                                        |
+| ------------------- | ---------------------------------------------- |
+| `lead-service`      | Web Scraping + Firmendaten-Erhebung            |
+| `ai-service`        | GPT-gestützte Datenanreicherung                |
+| `email-service`     | Kampagnen-Management & automatisierter Versand |
+| `calendar-service`  | Google Calendar API – Terminbuchung            |
+| `user-service`      | Authentifizierung & Rechte                     |
+| `crm-frontend`      | Kampagnen, Kontakte, Gesprächsnotizen          |
+| `crm-demo-frontend` | Kampagnen, Kontakte, Gesprächsnotizen          |
+
 Mehr Details: [ARCHITECTURE.md](./ARCHITECTURE.md)
 
 ---
@@ -51,7 +53,7 @@ Mehr Details: [ARCHITECTURE.md](./ARCHITECTURE.md)
 ## 📂 Ordnerstruktur
 
 ```bash
-/apps                            # Enthält alle produktiven Microservices & Frontends
+/apps                          # Enthält alle produktiven Microservices & Frontends
 │
 ├── ai-service/                  # GPT-Anbindung, Kommunikation mit OpenAI API
 │   ├── config/                  # OpenAI-Konfigurationen, Model-Settings
@@ -74,8 +76,8 @@ Mehr Details: [ARCHITECTURE.md](./ARCHITECTURE.md)
 │
 ├── website-crm/                 # Öffentliche CRM-Demo für Showcase-Zwecke
 
-/apps/libs                        # Wiederverwendbare Logik, modularisiert durch Nx
-├── shared/                       # Globale, serviceübergreifende Bausteine
+/apps/libs                      # Wiederverwendbare Logik, modularisiert durch Nx
+├── shared/                     # Globale, serviceübergreifende Bausteine
 │   └── src/
 │       ├── constants/            # Zentrale Enums, Statuscodes etc.
 │       ├── helper/               # Utility-Funktionen, z. B. zodToDto(), sleep()
@@ -88,15 +90,15 @@ Mehr Details: [ARCHITECTURE.md](./ARCHITECTURE.md)
 │       ├── aiService/            # Prompt-Schemas, OpenAI-Contracts
 │       └── websiteThesis/        # Reusable Logic für die Landingpage
 
-├── services/                      # Service-Bausteine, domainbezogen
+├── services/                   # Service-Bausteine, domainbezogen
 │   └── src/
 │       ├── database/             # Prisma / Sequelize / Raw-Queries
 │       ├── oauth/                # OAuth2-Flow-Handling
-│       ├── middlewares/         # Express Middlewares (z. B. errorGuard, logUser)
+│       ├── middlewares/          # Express Middlewares (z. B. errorGuard, logUser)
 │       ├── services/             # Business-Logik (z. B. userService.ts, leadEnricher.ts)
 │       ├── util/                 # kleinere reine Funktionen
 
-├── ui/                            # Wiederverwendbare UI-Komponenten
+├── ui/                         # Wiederverwendbare UI-Komponenten
 │   └── src/
 │       ├── components/           # z. B. Button, Modal, LeadTable
 │       ├── layout/               # z. B. Sidebar, Header, AuthWrapper
@@ -112,6 +114,7 @@ package.json                    # Root-Abhängigkeiten
 ## 📂 Projektstruktur (Monorepo mit Nx)
 
 ### /apps – Services & Frontends
+
 - `ai-service` → GPT-Prompting & Datenanreicherung
 - `lead-service` → Unternehmensdaten & Web-Scraping
 - `email-service` → Kampagnen & Versand
@@ -124,6 +127,66 @@ package.json                    # Root-Abhängigkeiten
 ---
 
 ### /libs – Wiederverwendbare Module & Logik
+
 - `shared/` → globale Logik wie Zod-Schemas, DTOs, JWT, Error Handling
 - `services/` → DB-Access, Middlewares, OAuth, Business-Logik
 - `ui/` → wiederverwendbare UI-Komponenten, Hooks, Layouts
+
+## 🚀 CI/CD & Deployment
+
+Das System nutzt eine moderne CI/CD-Pipeline mit **Nx**, **GitHub Actions** und **Remote Deployment via SSH**, um alle Services zuverlässig in Produktion zu bringen.
+
+---
+
+### 🔧 Build Pipeline (Monorepo)
+
+- `nx run-many --target=build --all` – baut alle Services & Frontends
+- Codequalität: `eslint`, `prettier`, `jest` (Tests für FE + BE)
+- Environment-spezifische `.env`-Files
+- Zentrale Verwaltung durch `nx.json`, `project.json`, `tsconfig.json`
+
+---
+
+### ⚙️ Deployment Highlights
+
+- **SSH-basiertes Deployment** der Services auf dedizierten Linux-Server
+- **Google Cloud OIDC Authentifizierung** für Zugriff auf Kalender API
+- **PM2** zur Verwaltung & Neustart von Node.js-Services
+- **Sequelize Migrationen & Seedings** laufen automatisiert mit
+- Deployment erfolgt **pro Service** (z. B. `user-service`, `ai-service` etc.)
+
+---
+
+### 🔍 Beispiel (gekürzt)
+
+```yaml
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Dependencies
+        run: npm install
+      - name: Build Monorepo
+        run: npx nx run-many --target=build --all
+      - name: Deploy ai-service
+        run: |
+          scp -r dist/apps/ai-service/. user@server:/srv/ai-service
+          ssh user@server "
+            cd /srv/ai-service &&
+            npm install &&
+            npx sequelize-cli db:migrate &&
+            pm2 restart ai-service
+          "
+          ...
+```
+
+### 📁 Workflow-Setup
+
+Die Pipeline umfasst:
+
+- Multi-Service-Deployment
+- Google Access Token Handling (OIDC)
+- Dynamisches ENV-Management
+- Logging & Debug-Steps für CI-Ausgaben
+- Details: [DEPLOYMENT_DETAILS.md](./DEPLOYMENT_DETAILS.md)
